@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static page.PagePayment.waitSuccessMessage;
 import static page.PagePayment.withCardNumber;
 import static page.PagePaymentOnCredit.*;

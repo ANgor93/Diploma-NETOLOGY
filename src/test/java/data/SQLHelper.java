@@ -5,16 +5,30 @@ import models.PaymentRequest;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 
-
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 public class SQLHelper {
-    private static final String URL = System.getProperty("db.url");
-    private static final String USERNAME = System.getProperty("db.username");
-    private static final String PASSWORD = System.getProperty("db.password");
     private static Connection connect;
+    private static final String URL;
+    private static final String USERNAME;
+    private static final String PASSWORD;
+
+    static {
+        Properties props = new Properties();
+        try (InputStream inputStream = SQLHelper.class.getClassLoader().getResourceAsStream("application.properties")) {
+            props.load(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        URL = props.getProperty("spring.datasourceMySql.url");
+        USERNAME = props.getProperty("spring.datasource.username");
+        PASSWORD = props.getProperty("spring.datasource.password");
+    }
 
     private static Connection getConnection() {
         try {
@@ -62,5 +76,15 @@ public class SQLHelper {
             sqlException.printStackTrace();
         }
         return null;
+    }
+
+    public static void closeConnection() {
+        try {
+            if (connect != null) {
+                connect.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

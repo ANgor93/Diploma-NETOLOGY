@@ -7,7 +7,7 @@ import hooks.WebHooks;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+
 import static page.PagePayment.*;
 import static page.StartingPage.buyWithCard;
 
