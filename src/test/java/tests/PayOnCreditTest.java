@@ -1,23 +1,24 @@
 package tests;
 
 import data.DataHelper;
-
 import data.SQLHelper;
-import hooks.WebHooks;
+import pages.PagePayment;
+import tests.hooks.BaseTest;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static page.PagePayment.waitSuccessMessage;
-import static page.PagePayment.withCardNumber;
-import static page.PagePaymentOnCredit.*;
-import static page.PagePaymentOnCredit.waitErrorMessageAboutWrongFormat;
+import static pages.PagePaymentOnCredit.waitSuccessMessage;
+import static pages.PagePaymentOnCredit.withCardNumber;
+import static pages.PagePaymentOnCredit.*;
+import static pages.PagePaymentOnCredit.waitErrorMessageAboutWrongFormat;
 
-import static page.StartingPage.buyWithCredit;
+import static pages.StartingPage.buyWithCard;
+import static pages.StartingPage.buyWithCredit;
 
-public class PayOnCreditTest extends WebHooks {
+public class PayOnCreditTest extends BaseTest {
 
 
     @Test
@@ -27,18 +28,17 @@ public class PayOnCreditTest extends WebHooks {
         var approvedCardNumber = DataHelper.getApprovedCardNumber();
         withCardNumber(approvedCardNumber);
         waitSuccessMessage();
-        var paymentWithInfo = SQLHelper.getCreditStatus();
+        var paymentWithInfo = SQLHelper.getLatestCreditRequest().getStatus();
         assertEquals("APPROVED", paymentWithInfo);
     }
-
     @Test
     @DisplayName("Тест с валидными данными")
     void shouldBeCheckedWithValidData() {
-        buyWithCredit();
+        buyWithCard();
         var approvedCardNumber = DataHelper.getApprovedCardNumber();
         withCardNumber(approvedCardNumber);
         waitSuccessMessage();
-        String paymentWithInfo = SQLHelper.getPaymentAmount();
+        var paymentWithInfo = SQLHelper.getLatestPaymentRequest().getAmount();
         assertEquals("45000", paymentWithInfo);
     }
 
@@ -49,7 +49,7 @@ public class PayOnCreditTest extends WebHooks {
         var declinedCardNumber = DataHelper.getDeclinedCardNumber();
         withCardNumber(declinedCardNumber);
         waitErrorMessage();
-        var paymentWithInfo = SQLHelper.getCreditStatus();
+        var paymentWithInfo = SQLHelper.getLatestCreditRequest().getStatus();
         assertEquals("APPROVED", paymentWithInfo);
     }
 

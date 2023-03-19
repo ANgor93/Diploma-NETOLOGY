@@ -1,4 +1,4 @@
-package elements;
+package pages.elements;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
@@ -8,8 +8,8 @@ import static com.codeborne.selenide.Selectors.withText;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
-public class PagePaymentOnCreditElem {
-    public static SelenideElement heading = $(byText("Кредит по данным карты"));
+public class PagePaymentElements {
+    public static SelenideElement heading = $(byText("Оплата по карте"));
     public static SelenideElement cardNumber = $("[placeholder= '0000 0000 0000 0000']");
     public static SelenideElement month = $("[placeholder= '08']");
     public static SelenideElement year = $("[placeholder= '22']");

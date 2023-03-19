@@ -38,15 +38,13 @@ dependencies {
     testImplementation 'io.qameta.allure:allure-selenide:2.14.0'
     testImplementation 'io.rest-assured:rest-assured:4.3.0'
     testImplementation 'org.slf4j:slf4j-simple:1.7.30'
-    compileOnly 'org.projectlombok:lombok:1.18.20'
-
 }
 
 test {
     useJUnitPlatform()
     systemProperty 'selenide.headless', System.getProperty('selenide.headless')
-    systemProperty 'database.url', System.getProperty('database.url')
-    systemProperty 'database.name', System.getProperty('database.name')
-    systemProperty 'database.password', System.getProperty('database.password')
+    systemProperty 'db.url', System.getProperty('db.url')
+    systemProperty 'db.username', System.getProperty('db.username', 'app')
+    systemProperty 'db.password', System.getProperty('db.password', 'pass')
     systemProperty 'sut.url', System.getProperty('sut.url', 'http://localhost:8080')
 }

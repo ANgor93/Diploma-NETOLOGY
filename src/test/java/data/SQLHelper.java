@@ -5,6 +5,7 @@ import models.PaymentRequest;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -18,17 +19,19 @@ public class SQLHelper {
     private static final String USERNAME;
     private static final String PASSWORD;
 
+
     static {
         Properties props = new Properties();
-        try (InputStream inputStream = SQLHelper.class.getClassLoader().getResourceAsStream("application.properties")) {
+        try (InputStream inputStream = new FileInputStream("./application.properties")) {
             props.load(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        URL = props.getProperty("spring.datasourceMySql.url");
+        URL = props.getProperty("spring.datasource.url");
         USERNAME = props.getProperty("spring.datasource.username");
         PASSWORD = props.getProperty("spring.datasource.password");
     }
+
 
     private static Connection getConnection() {
         try {
@@ -39,43 +42,43 @@ public class SQLHelper {
         return connect;
     }
 
-    public static String getPaymentStatus() {
+    public static PaymentRequest getLatestPaymentRequest() {
         var runner = new QueryRunner();
-        var payStatus = "SELECT status FROM payment_entity";
+        var payRequest = "SELECT * FROM payment_entity ORDER BY id DESC LIMIT 1";
 
         try (var connect = getConnection()) {
-            var paymentStatus = runner.query(connect, payStatus, new BeanHandler<>(PaymentRequest.class));
-            return paymentStatus.getStatus();
+            var paymentRequest = runner.query(connect, payRequest, new BeanHandler<>(PaymentRequest.class));
+            return paymentRequest;
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
         return null;
     }
 
-    public static String getPaymentAmount() {
+    public static CreditRequest getLatestCreditRequest() {
         var runner = new QueryRunner();
-        var payAmount = "SELECT amount FROM payment_entity";
+        var cRequest = "SELECT * FROM credit_request_entity ORDER BY id DESC LIMIT 1";
 
         try (var connect = getConnection()) {
-            var paymentAmount = runner.query(connect, payAmount, new BeanHandler<>(PaymentRequest.class));
-            return paymentAmount.getAmount();
+            var creditRequest = runner.query(connect, cRequest, new BeanHandler<>(CreditRequest.class));
+            return creditRequest;
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
         return null;
     }
 
-    public static String getCreditStatus() {
+    public static void clearTables() {
         var runner = new QueryRunner();
-        var cStatus = "SELECT status FROM credit_request_entity";
+        var payClear = "DELETE FROM payment_entity";
+        var cClear = "DELETE FROM credit_request_entity";
 
         try (var connect = getConnection()) {
-            var creditStatus = runner.query(connect, cStatus, new BeanHandler<>(CreditRequest.class));
-            return creditStatus.getStatus();
+            runner.update(connect, payClear);
+            runner.update(connect, cClear);
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
-        return null;
     }
 
     public static void closeConnection() {

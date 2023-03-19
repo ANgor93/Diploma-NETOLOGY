@@ -1,9 +1,8 @@
-package page;
+package pages;
 
-import io.qameta.allure.Step;
 
-import static elements.StartingPageElements.buyWithCardButton;
-import static elements.StartingPageElements.buyWithCreditButton;
+import static pages.elements.StartingPageElements.buyWithCardButton;
+import static pages.elements.StartingPageElements.buyWithCreditButton;
 
 public class StartingPage {
 

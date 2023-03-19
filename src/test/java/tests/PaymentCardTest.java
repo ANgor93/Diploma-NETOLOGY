@@ -1,17 +1,16 @@
 package tests;
 
-import data.DataHelper;
-
 import data.SQLHelper;
-import hooks.WebHooks;
+import data.DataHelper;
+import tests.hooks.BaseTest;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static page.PagePayment.*;
-import static page.StartingPage.buyWithCard;
+import static pages.PagePayment.*;
+import static pages.StartingPage.buyWithCard;
 
-public class PaymentCardTest extends WebHooks {
+public class PaymentCardTest extends BaseTest {
 
 
     @Test
@@ -21,7 +20,7 @@ public class PaymentCardTest extends WebHooks {
         var approvedCardNumber = DataHelper.getApprovedCardNumber();
         withCardNumber(approvedCardNumber);
         waitSuccessMessage();
-        var paymentWithInfo = SQLHelper.getPaymentStatus();
+        var paymentWithInfo = SQLHelper.getLatestPaymentRequest().getStatus();
         assertEquals("APPROVED", paymentWithInfo);
     }
 
@@ -32,7 +31,7 @@ public class PaymentCardTest extends WebHooks {
         var approvedCardNumber = DataHelper.getApprovedCardNumber();
         withCardNumber(approvedCardNumber);
         waitSuccessMessage();
-        String paymentWithInfo = SQLHelper.getPaymentAmount();
+        var paymentWithInfo = SQLHelper.getLatestPaymentRequest().getAmount();
         assertEquals("45000", paymentWithInfo);
     }
 
@@ -43,7 +42,7 @@ public class PaymentCardTest extends WebHooks {
         var declinedCardNumber = DataHelper.getDeclinedCardNumber();
         withCardNumber(declinedCardNumber);
         waitErrorMessage();
-        var paymentWithInfo = SQLHelper.getPaymentStatus();
+        var paymentWithInfo = SQLHelper.getLatestPaymentRequest().getStatus();
         assertEquals("DECLINED", paymentWithInfo);
     }
 
