@@ -1,4 +1,4 @@
-
+[![Build status](https://ci.appveyor.com/api/projects/status/a95ujv0vnfu4eu25/branch/main?svg=true)](https://ci.appveyor.com/project/ANgor93/diploma-netology/branch/main)
 ## Запуск приложения
 
 Перед запуском необходимо выполнить следующие предусловия. Если у вас уже есть необходимое ПО, то понадобится только п.1 и запуск Docker.
