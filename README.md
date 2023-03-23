@@ -18,8 +18,8 @@
 
 2. В новой вкладке терминала ввести следующую команду в зависимости от базы данных
 
-> * `java -Dspring.datasource.url=jdbc:mysql://localhost:3306/app -jar ./artifacts/aqa-shop.jar` - для MySQL
-> * `java -Dspring.datasource.url=jdbc:postgresql://localhost:5432/app -jar ./artifacts/aqa-shop.jar` - для PostgreSQL
+> * `java -Dspring.datasource.url=jdbc:mysql://localhost:3306/app -Dspring.datasource.username=app -Dspring.datasource.password=pass -jar ./artifacts/aqa-shop.jar` - для MySQL
+> * `java -Dspring.datasource.url=jdbc:postgresql://localhost:5432/app -Dspring.datasource.username=app -Dspring.datasource.password=pass -jar ./artifacts/aqa-shop.jar` - для PostgreSQL
 
 3. Проверка работающих контейнеров:
 
@@ -32,10 +32,10 @@
 ## Запуск автотестов
 
 1. Для запуска автотестов с "MySQL",  необходимо открыть новую вкладку терминала и ввести следующую команду:
-> * `gradlew test -Dselenide.headless=true -Durlbd=jdbc:mysql://localhost:3306/app --info`
+> * `gradlew test -Dselenide.headless=true -Dspring.datasource.url=jdbc:mysql://localhost:3306/app --info`
 
 2. Для запуска автотестов с "PostgreSQL",  необходимо открыть новую вкладку терминала и ввести следующую команду:
-> * `gradlew test -Dselenide.headless=true -Durlbd=jdbc:postgresql://localhost:5432/app --info`
+> * `gradlew test -Dselenide.headless=true -Dspring.datasource.url=jdbc:postgresql://localhost:5432/app --info`
 
 ## Запуск отчета тестирования
 

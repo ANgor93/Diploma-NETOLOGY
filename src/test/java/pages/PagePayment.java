@@ -5,6 +5,8 @@ import com.codeborne.selenide.Condition;
 import data.DataHelper;
 
 
+import java.time.Duration;
+
 import static pages.elements.PagePaymentElements.*;
 
 public class PagePayment {
@@ -14,7 +16,7 @@ public class PagePayment {
         heading.shouldBe(Condition.visible);
     }
 
-    public static void withCardNumber(String number) {
+    public void withCardNumber(String number) {
         cardNumber.setValue(number);
         month.setValue(DataHelper.getCurrentMonth());
         year.setValue(DataHelper.getCurrentYear());
@@ -23,7 +25,7 @@ public class PagePayment {
         continueButton.click();
     }
 
-    public static void withMonth(String monthNumber) {
+    public void withMonth(String monthNumber) {
         cardNumber.setValue(DataHelper.getApprovedCardNumber());
         month.setValue(monthNumber);
         year.setValue(DataHelper.getCurrentYear());
@@ -32,7 +34,7 @@ public class PagePayment {
         continueButton.click();
     }
 
-    public static void withYear(String yearNumber) {
+    public void withYear(String yearNumber) {
         cardNumber.setValue(DataHelper.getApprovedCardNumber());
         month.setValue(DataHelper.getCurrentMonth());
         year.setValue(yearNumber);
@@ -41,7 +43,7 @@ public class PagePayment {
         continueButton.click();
     }
 
-    public static void withCardholder(String nameOfCardholder) {
+    public void withCardholder(String nameOfCardholder) {
         cardNumber.setValue(DataHelper.getApprovedCardNumber());
         month.setValue(DataHelper.getCurrentMonth());
         year.setValue(DataHelper.getCurrentYear());
@@ -50,7 +52,7 @@ public class PagePayment {
         continueButton.click();
     }
 
-    public static void withCardValidationCode(String cvc) {
+    public void withCardValidationCode(String cvc) {
         cardNumber.setValue(DataHelper.getApprovedCardNumber());
         month.setValue(DataHelper.getCurrentMonth());
         year.setValue(DataHelper.getCurrentYear());
@@ -59,34 +61,31 @@ public class PagePayment {
         continueButton.click();
     }
 
-    public static void emptyFields() {
+    public void emptyFields() {
         continueButton.click();
     }
 
-    public static void waitSuccessMessage() {
-        successMessage.waitUntil(Condition.visible, 20000);
+    public void waitSuccessMessage() {
+        successMessage.should(Condition.visible, Duration.ofSeconds(20));
     }
 
-    public static void waitErrorMessage() {
-
-        errorMessage.waitUntil(Condition.visible, 20000);
+    public void waitErrorMessage() {
+        errorMessage.should(Condition.visible, Duration.ofSeconds(20));
     }
 
-    public static void waitErrorMessageAboutWrongFormat() {
-
-        errorMessageAboutWrongFormat.waitUntil(Condition.visible, 10000);
+    public void waitErrorMessageAboutWrongFormat() {
+        errorMessageAboutWrongFormat.should(Condition.visible, Duration.ofSeconds(10));
     }
 
-    public static void waitErrorMessageAboutWrongDateOfExpiry() {
-        errorMessageAboutWrongDateOfExpiry.waitUntil(Condition.visible, 10000);
+    public void waitErrorMessageAboutWrongDateOfExpiry() {
+        errorMessageAboutWrongDateOfExpiry.should(Condition.visible, Duration.ofSeconds(10));
     }
 
-    public static void waitErrorMessageWithDateOfExpiry() {
-
-        errorMessageWithDateOfExpiry.waitUntil(Condition.visible, 10000);
+    public void waitErrorMessageWithDateOfExpiry() {
+        errorMessageWithDateOfExpiry.should(Condition.visible, Duration.ofSeconds(10));
     }
 
-    public static void waitErrorMessageBecauseOfEmptyField() {
-        errorMessageBecauseOfEmptyField.waitUntil(Condition.visible, 15000);
+    public void waitErrorMessageBecauseOfEmptyField() {
+        errorMessageBecauseOfEmptyField.should(Condition.visible, Duration.ofSeconds(15));
     }
 }

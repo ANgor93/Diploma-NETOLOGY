@@ -2,13 +2,12 @@ package tests;
 
 import data.SQLHelper;
 import data.DataHelper;
+import pages.StartingPage;
 import tests.hooks.BaseTest;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import static pages.PagePayment.*;
-import static pages.StartingPage.buyWithCard;
 
 public class PaymentCardTest extends BaseTest {
 
@@ -16,10 +15,11 @@ public class PaymentCardTest extends BaseTest {
     @Test
     @DisplayName("Покупка с APPROVED картой")
     void shouldBuySuccessfullyWithApprovedCard() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCard = startingPage.buyWithCard();
         var approvedCardNumber = DataHelper.getApprovedCardNumber();
-        withCardNumber(approvedCardNumber);
-        waitSuccessMessage();
+        buyWithCard.withCardNumber(approvedCardNumber);
+        buyWithCard.waitSuccessMessage();
         var paymentWithInfo = SQLHelper.getLatestPaymentRequest().getStatus();
         assertEquals("APPROVED", paymentWithInfo);
     }
@@ -27,10 +27,11 @@ public class PaymentCardTest extends BaseTest {
     @Test
     @DisplayName("Тест с валидными данными")
     void shouldBeCheckedWithValidData() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCard = startingPage.buyWithCard();
         var approvedCardNumber = DataHelper.getApprovedCardNumber();
-        withCardNumber(approvedCardNumber);
-        waitSuccessMessage();
+        buyWithCard.withCardNumber(approvedCardNumber);
+        buyWithCard.waitSuccessMessage();
         var paymentWithInfo = SQLHelper.getLatestPaymentRequest().getAmount();
         assertEquals("45000", paymentWithInfo);
     }
@@ -38,10 +39,11 @@ public class PaymentCardTest extends BaseTest {
     @Test
     @DisplayName("Покупка с DECLINED картой")
     void shouldNotSellWithDeclinedCard() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCard = startingPage.buyWithCard();
         var declinedCardNumber = DataHelper.getDeclinedCardNumber();
-        withCardNumber(declinedCardNumber);
-        waitErrorMessage();
+        buyWithCard.withCardNumber(declinedCardNumber);
+        buyWithCard.waitErrorMessage();
         var paymentWithInfo = SQLHelper.getLatestPaymentRequest().getStatus();
         assertEquals("DECLINED", paymentWithInfo);
     }
@@ -49,198 +51,223 @@ public class PaymentCardTest extends BaseTest {
     @Test
     @DisplayName("Отправка пустой формы")
     void shouldNotSellWhenAllFieldsAreEmpty() {
-        buyWithCard();
-        emptyFields();
-        waitErrorMessageAboutWrongFormat();
-        waitErrorMessageBecauseOfEmptyField();
+        var startingPage = new StartingPage();
+        var buyWithCard = startingPage.buyWithCard();
+        buyWithCard.emptyFields();
+        buyWithCard.waitErrorMessageAboutWrongFormat();
+        buyWithCard.waitErrorMessageAboutWrongFormat();
+        buyWithCard.waitErrorMessageAboutWrongFormat();
+        buyWithCard.waitErrorMessageBecauseOfEmptyField();
+        buyWithCard.waitErrorMessageAboutWrongFormat();
     }
 
     @Test
     @DisplayName("Поле CVC содержит одну цифру")
     void shouldNotSellWhenCardValidationCodeIsTwoDigitsShort() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCard = startingPage.buyWithCard();
         var cvc = "1";
-        withCardValidationCode(cvc);
-        waitErrorMessageAboutWrongFormat();
+        buyWithCard.withCardValidationCode(cvc);
+        buyWithCard.waitErrorMessageAboutWrongFormat();
     }
 
     @Test
     @DisplayName("Поле CVC содержит две цифры")
     void shouldNotSellWhenCardValidationCodeIsOneDigitShort() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCard = startingPage.buyWithCard();
         var cvc = "12";
-        withCardValidationCode(cvc);
-        waitErrorMessageAboutWrongFormat();
+        buyWithCard.withCardValidationCode(cvc);
+        buyWithCard.waitErrorMessageAboutWrongFormat();
     }
 
     @Test
     @DisplayName("Поле владелец содержит только Фамилию")
     void shouldNotSellWhenNameOfCardholderIsOnlyLastName() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCard = startingPage.buyWithCard();
         var nameOfCardHolder = DataHelper.getOnlyUsersLastName();
-        withCardholder(nameOfCardHolder);
-        waitErrorMessageAboutWrongFormat();
+        buyWithCard.withCardholder(nameOfCardHolder);
+        buyWithCard.waitErrorMessageAboutWrongFormat();
     }
 
     @Test
     @DisplayName("Поле владелец содержит только Имя")
     void shouldNotSellWhenNameOfCardholderIsOnlyFirstName() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCard = startingPage.buyWithCard();
         var nameOfCardHolder = DataHelper.getOnlyUsersFirstName();
-        withCardholder(nameOfCardHolder);
-        waitErrorMessageAboutWrongFormat();
+        buyWithCard.withCardholder(nameOfCardHolder);
+        buyWithCard.waitErrorMessageAboutWrongFormat();
     }
 
     @Test
     @DisplayName("Срок карты истек")
     void shouldNotSellWhenYearNumberIsLowerThanAllowed() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCard = startingPage.buyWithCard();
         var yearNumber = "22";
-        withYear(yearNumber);
-        waitErrorMessageWithDateOfExpiry();
+        buyWithCard.withYear(yearNumber);
+        buyWithCard.waitErrorMessageWithDateOfExpiry();
     }
 
     @Test
     @DisplayName("Срок карты слишком большой")
     void shouldNotSellWhenYearNumberExceedsTheAllowed() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCard = startingPage.buyWithCard();
         var yearNumber = "99";
-        withYear(yearNumber);
-        waitErrorMessageAboutWrongDateOfExpiry();
+        buyWithCard.withYear(yearNumber);
+        buyWithCard.waitErrorMessageAboutWrongDateOfExpiry();
     }
 
     @Test
     @DisplayName("В поле год ввести одну цифру")
     void shouldNotSellWhenYearNumberIsOneDigitalShort() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCard = startingPage.buyWithCard();
         var yearNumber = "2";
-        withYear(yearNumber);
-        waitErrorMessageAboutWrongFormat();
+        buyWithCard.withYear(yearNumber);
+        buyWithCard.waitErrorMessageAboutWrongFormat();
     }
 
     @Test
     @DisplayName("В поле год ввести 00")
     void shouldNotSellWhenYearNumberIsZeros() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCardPage = startingPage.buyWithCard();
         var yearNumber = "00";
-        withYear(yearNumber);
-        waitErrorMessageWithDateOfExpiry();
+        buyWithCardPage.withYear(yearNumber);
+        buyWithCardPage.waitErrorMessageWithDateOfExpiry();
     }
 
     @Test
     @DisplayName("Номер карты состоит из 0")
     void shouldNotSellWhenCardNumberIsZeros() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCardPage = startingPage.buyWithCard();
         var number = "0000 0000 0000 0000";
-        withCardNumber(number);
-        waitErrorMessage();
+        buyWithCardPage.withCardNumber(number);
+        buyWithCardPage.waitErrorMessage();
     }
 
     @Test
     @DisplayName("В поле номер карты ввести невалидные данные карты")
     void shouldNotSellWhenCardNumberIsUnknown() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCardPage = startingPage.buyWithCard();
         var number = "4444 4444 4444 4443";
-        withCardNumber(number);
-        waitErrorMessage();
+        buyWithCardPage.withCardNumber(number);
+        buyWithCardPage.waitErrorMessage();
     }
 
     @Test
     @DisplayName("В поле номер карты ввести меньше 16 цифр")
     void shouldNotSellWhenCardNumberIsShort() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCardPage = startingPage.buyWithCard();
         var number = "4444 4444 4444 444";
-        withCardNumber(number);
-        waitErrorMessageAboutWrongFormat();
+        buyWithCardPage.withCardNumber(number);
+        buyWithCardPage.waitErrorMessageAboutWrongFormat();
     }
 
     @Test
     @DisplayName("В поле месяц ввести 00")
     void shouldNotSellWhenMonthNumberIsZeros() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCardPage = startingPage.buyWithCard();
         var monthNumber = "00";
-        withMonth(monthNumber);
-        waitErrorMessageAboutWrongDateOfExpiry();
+        buyWithCardPage.withMonth(monthNumber);
+        buyWithCardPage.waitErrorMessageAboutWrongDateOfExpiry();
     }
 
     @Test
     @DisplayName("В поле месяц ввести одну цифру")
     void shouldNotSellWhenMonthNumberIsOneDigitShort() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCardPage = startingPage.buyWithCard();
         var monthNumber = "2";
-        withMonth(monthNumber);
-        waitErrorMessageAboutWrongFormat();
+        buyWithCardPage.withMonth(monthNumber);
+        buyWithCardPage.waitErrorMessageAboutWrongFormat();
     }
 
     @Test
     @DisplayName("В поле месяц ввести несуществующий месяц")
     void shouldNotSellWhenMonthNumberExceedsTheAllowed() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCardPage = startingPage.buyWithCard();
         var monthNumber = "13";
-        withMonth(monthNumber);
-        waitErrorMessageAboutWrongDateOfExpiry();
+        buyWithCardPage.withMonth(monthNumber);
+        buyWithCardPage.waitErrorMessageAboutWrongDateOfExpiry();
     }
 
     @Test
     @DisplayName("В поле владелец ввести одну букву")
     void shouldNotSellWhenNameOfCardholderIsOnlyOneLetter() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCardPage = startingPage.buyWithCard();
         var nameOfCardHolder = "R";
-        withCardholder(nameOfCardHolder);
-        waitErrorMessageAboutWrongFormat();
+        buyWithCardPage.withCardholder(nameOfCardHolder);
+        buyWithCardPage.waitErrorMessageAboutWrongFormat();
     }
 
     @Test
     @DisplayName("В поле владелец ввести много букв")
     void shouldNotSellWhenNameOfCardholderHasLotsOfLetters() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCardPage = startingPage.buyWithCard();
         var nameOfCardHolder = "QWEJVNCMDKDFCVBGAJZNDTMDLMREW QWFTGRYFBSYRHFYTVCPQZMHYNJI ";
-        withCardholder(nameOfCardHolder);
-        waitErrorMessageAboutWrongFormat();
+        buyWithCardPage.withCardholder(nameOfCardHolder);
+        buyWithCardPage.waitErrorMessageAboutWrongFormat();
     }
 
     @Test
     @DisplayName("В поле владелец ввести данные строчными буквами")
     void shouldNotSellWhenNameOfCardholderInLowerCaseLetters() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCardPage = startingPage.buyWithCard();
         var nameOfCardHolder = DataHelper.getFullUsersNameInLowCaseLetters();
-        withCardholder(nameOfCardHolder);
-        waitErrorMessageAboutWrongFormat();
+        buyWithCardPage.withCardholder(nameOfCardHolder);
+        buyWithCardPage.waitErrorMessageAboutWrongFormat();
     }
 
     @Test
     @DisplayName("В поле владелец ввести данные прописными и строчными буквами")
     void shouldNotSellWhenNameOfCardholderInUpperCaseAndLowerCaseLetters() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCardPage = startingPage.buyWithCard();
         var nameOfCardHolder = DataHelper.getFullUsersNameInUpperCaseAndLowCaseLetters();
-        withCardholder(nameOfCardHolder);
-        waitErrorMessageAboutWrongFormat();
+        buyWithCardPage.withCardholder(nameOfCardHolder);
+        buyWithCardPage.waitErrorMessageAboutWrongFormat();
     }
 
     @Test
     @DisplayName("В поле владелец ввести данные на кириллице")
     void shouldNotSellWhenNameOfCardholderIsInRussian() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCardPage = startingPage.buyWithCard();
         var nameOfCardHolder = DataHelper.getFullUsersNameInRussian("ru");
-        withCardholder(nameOfCardHolder);
-        waitErrorMessageAboutWrongFormat();
+        buyWithCardPage.withCardholder(nameOfCardHolder);
+        buyWithCardPage.waitErrorMessageAboutWrongFormat();
     }
 
     @Test
     @DisplayName("В поле владелец ввести цифры")
     void shouldNotSellWhenNameOfCardholderInContainsNumbers() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCardPage = startingPage.buyWithCard();
         var nameOfCardHolder = "1234567890";
-        withCardholder(nameOfCardHolder);
-        waitErrorMessageAboutWrongFormat();
+        buyWithCardPage.withCardholder(nameOfCardHolder);
+        buyWithCardPage.waitErrorMessageAboutWrongFormat();
     }
 
     @Test
     @DisplayName("В поле владелец ввести спецсимволы")
     void shouldNotSellWhenNameOfCardholderInContainsSpecialCharacters() {
-        buyWithCard();
+        var startingPage = new StartingPage();
+        var buyWithCardPage = startingPage.buyWithCard();
         var nameOfCardHolder = "!@#$%^&*";
-        withCardholder(nameOfCardHolder);
-        waitErrorMessageAboutWrongFormat();
+        buyWithCardPage.withCardholder(nameOfCardHolder);
+        buyWithCardPage.waitErrorMessageAboutWrongFormat();
     }
 }

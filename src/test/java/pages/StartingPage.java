@@ -7,12 +7,12 @@ import static pages.elements.StartingPageElements.buyWithCreditButton;
 public class StartingPage {
 
 
-    public static PagePayment buyWithCard() {
+    public PagePayment buyWithCard() {
         buyWithCardButton.click();
         return new PagePayment();
     }
 
-    public static PagePaymentOnCredit buyWithCredit() {
+    public PagePaymentOnCredit buyWithCredit() {
         buyWithCreditButton.click();
         return new PagePaymentOnCredit();
     }

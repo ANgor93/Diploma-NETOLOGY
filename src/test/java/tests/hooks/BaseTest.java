@@ -26,6 +26,10 @@ public class BaseTest {
     void shouldOpen() {
         String sutUrl = System.getProperty("sut.url");
         open(sutUrl);
+    }
+
+    @AfterEach
+    void shouldClearAll() {
         clearTables();
     }
 }

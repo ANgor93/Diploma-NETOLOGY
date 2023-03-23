@@ -36,15 +36,13 @@ dependencies {
     testImplementation 'commons-dbutils:commons-dbutils:1.7'
     testImplementation 'com.github.javafaker:javafaker:1.0.2'
     testImplementation 'io.qameta.allure:allure-selenide:2.14.0'
-    testImplementation 'io.rest-assured:rest-assured:4.3.0'
-    testImplementation 'org.slf4j:slf4j-simple:1.7.30'
 }
 
 test {
     useJUnitPlatform()
     systemProperty 'selenide.headless', System.getProperty('selenide.headless')
-    systemProperty 'db.url', System.getProperty('db.url')
-    systemProperty 'db.username', System.getProperty('db.username', 'app')
-    systemProperty 'db.password', System.getProperty('db.password', 'pass')
+    systemProperty 'spring.datasource.url', System.getProperty('spring.datasource.url')
+    systemProperty 'spring.datasource.username', System.getProperty('spring.datasource.username')
+    systemProperty 'spring.datasource.password', System.getProperty('spring.datasource.password')
     systemProperty 'sut.url', System.getProperty('sut.url', 'http://localhost:8080')
 }

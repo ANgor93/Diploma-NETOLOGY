@@ -44,7 +44,7 @@ public class SQLHelper {
 
     public static PaymentRequest getLatestPaymentRequest() {
         var runner = new QueryRunner();
-        var payRequest = "SELECT * FROM payment_entity ORDER BY id DESC LIMIT 1";
+        var payRequest = "SELECT * FROM payment_entity ORDER BY created DESC LIMIT 1";
 
         try (var connect = getConnection()) {
             var paymentRequest = runner.query(connect, payRequest, new BeanHandler<>(PaymentRequest.class));
@@ -57,7 +57,7 @@ public class SQLHelper {
 
     public static CreditRequest getLatestCreditRequest() {
         var runner = new QueryRunner();
-        var cRequest = "SELECT * FROM credit_request_entity ORDER BY id DESC LIMIT 1";
+        var cRequest = "SELECT * FROM credit_request_entity ORDER BY created DESC LIMIT 1";
 
         try (var connect = getConnection()) {
             var creditRequest = runner.query(connect, cRequest, new BeanHandler<>(CreditRequest.class));
